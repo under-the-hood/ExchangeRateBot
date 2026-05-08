@@ -1,4 +1,4 @@
-os
-dotenv
+python-dotenv
 requests
-asyncio
+uvicorn
+fastapi
