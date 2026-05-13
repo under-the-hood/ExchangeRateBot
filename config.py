@@ -1,11 +1,41 @@
 import os
-from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
-load_dotenv()
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+class Settings(BaseSettings):
+    MODE: str = "DEV"
+
+    DB_HOST: str
+    DB_PORT: int
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+
+    BOT_TOKEN: str
+
+    @property
+    def database(self):
+        return f'postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.POSTGRES_DB}'
+
+    @classmethod
+    def load_settings(cls):
+        mode = os.getenv("MODE", "DEV").upper()
+        
+        if mode == "TEST":
+            env_file = ".test.env"
+        elif mode == "PROD":
+            env_file = ".prod.env"
+        else:
+            env_file = ".dev.env"
+
+        if os.path.exists(os.path.join(current_dir, env_file)):
+            return cls(_env_file=os.path.join(current_dir, env_file))
+        return cls()
+
+settings = Settings.load_settings()
+
 url = f"https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json"
 currency = "rub"    #Set your currency
-telegram_token = os.getenv("BOT_TOKEN")
-
-users_to_send = [
-    ...     #set your telegram id
-]
+telegram_token = settings.BOT_TOKEN
