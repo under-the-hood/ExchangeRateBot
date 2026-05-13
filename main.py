@@ -6,10 +6,12 @@ from fastapi import FastAPI
 from services.services import track_rate_changes
 from router import main_router
 from utils.bot_loader import dp, bot
+from handlers.handlers import router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    dp.include_router(router)
     asyncio.create_task(dp.start_polling(bot))
     monitoring_task = asyncio.create_task(track_rate_changes())
     yield

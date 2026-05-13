@@ -1,4 +1,8 @@
-requests
-uvicorn
 fastapi
-pytest
+uvicorn
+aiogram
+sqlalchemy
+asyncpg
+alembic
+pydantic-settings
+httpx

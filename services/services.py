@@ -1,8 +1,5 @@
 from httpx import AsyncClient
 import asyncio
-from aiogram import Router
-from aiogram.filters import Command
-from aiogram.types import Message
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy import select
 
@@ -60,19 +57,10 @@ async def get_current_exchange_rate_service(current_currency: str = None):
     return rate
 
 
-router = Router()
-
-@router.message(Command("start"))
-async def subscribe_user(message: Message):
-    """
-    Registers the user in the notification system if they are not already subscribed.
-    """
-    tg_user_id = message.from_user.id
+async def create_user(tg_user_id: int):
 
     async with new_session() as session:
         stmt = (insert(User).values(user_id=tg_user_id).on_conflict_do_nothing(index_elements=['user_id']))
 
         await session.execute(stmt)
         await session.commit()
-
-        await message.answer("You have successfully subscribed to exchange rate updates!")
