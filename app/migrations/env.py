@@ -10,9 +10,9 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-from config import settings
-from database.database import Base
-from models.user import User
+from app.config import settings
+from app.models.base import Base
+from app.models.user import User
 
 config.set_main_option("sqlalchemy.url", f"{settings.database}?async_fallback=True")
 

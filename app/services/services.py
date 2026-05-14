@@ -3,10 +3,10 @@ import asyncio
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy import select
 
-from config import url, currency
-from models.user import User
-from database.database import new_session
-from utils.bot_loader import bot
+from app.config import url, currency
+from app.models.user import User
+from app.database.database import new_session
+from app.utils.bot_loader import bot
 
 
 async def get_exchange_rate(url: str, currency: str):

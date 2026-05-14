@@ -2,7 +2,7 @@ from aiogram.filters import Command
 from aiogram import Router
 from aiogram.types import Message
 
-from services.services import create_user
+from app.services.services import create_user
 
 
 router = Router()

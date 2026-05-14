@@ -1,8 +1,9 @@
 import os
 from pydantic_settings import BaseSettings
+from pathlib import Path
 
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
+current_dir = Path(__file__).parent.parent
 
 class Settings(BaseSettings):
     MODE: str = "DEV"

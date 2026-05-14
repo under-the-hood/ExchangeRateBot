@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from services.services import get_current_exchange_rate_service
+from app.services.services import get_current_exchange_rate_service
 
 
 router = APIRouter()
