@@ -1,24 +1,23 @@
 import asyncio
-from contextlib import asynccontextmanager
-import uvicorn
-from fastapi import FastAPI
 
-from app.services.services import track_rate_changes
-from app.router import main_router
+from app.services.rate import track_rate_changes
 from app.utils.bot_loader import dp, bot
 from app.handlers.handlers import router
+from app.middlewares.user import check_user_registration
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+async def main():
+    # 1. Connect middlewares
+    dp.message.middleware(check_user_registration)
+    
+    # 2. Conneсt router
     dp.include_router(router)
-    asyncio.create_task(dp.start_polling(bot))
-    monitoring_task = asyncio.create_task(track_rate_changes())
-    yield
-    monitoring_task.cancel()
-
-app = FastAPI(lifespan=lifespan)
-app.include_router(main_router)
+    
+    # 3. Start monitoring in background mode
+    asyncio.create_task(track_rate_changes())
+    
+    # 4. Start bot
+    await dp.start_polling(bot)
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="localhost", port=8000)
+    asyncio.run(main())
